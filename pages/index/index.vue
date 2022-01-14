@@ -26,18 +26,18 @@
         }) no-repeat`,
         backgroundSize: '100%',
       }"> -->
-<!-- https://static.roi-cloud.com/upload/20220113/60935669134954 -->
+		<!-- https://static.roi-cloud.com/upload/20220113/60935669134954 -->
 		<view id="main" :style="{
         paddingTop: navbarHeight + 'px',
         minHeight: minHeight + 'px',
         background: `url(${
           gameInfo.backgroundInfo.backgroundUrl ||
-          'https://static.roi-cloud.com/upload/20220110/60935669150412'
+          'https://static.roi-cloud.com/upload/20220113/60935669134954'
         }) no-repeat`,
         backgroundSize: '100%',
       }">
 
-			<!-- <canvas canvas-id="lottie_demo" id="lottie_demo" type="2d" /> -->
+			<canvas canvas-id="lottie_demo" id="lottie_demo" type="2d" />
 			<!-- 	<image class="levl-1 trunk" src="https://static.roi-cloud.com/upload/20211229/60935669183338"
 				mode="aspectFill">
 			</image> -->
@@ -77,7 +77,7 @@
 				</view>
 			</view>
 
-			<image id="trunkId" :class="[
+			<!-- <image id="trunkId" :class="[
           'levl-1',
           { swiper_anumation: !playAnimation },
           { trunk_slow: playAnimation },
@@ -161,14 +161,14 @@
           { swiper_anumation_most: !playAnimation },
           { Wobble: playAnimation },
         ]" src="https://static.roi-cloud.com/upload/20211230/60935669091359" mode="aspectFill">
-			</image>
+			</image> -->
 			<view class="swiper_wrap">
 				<uni-notice-bar showIcon="true" color="#fff" background-color="transparent" scrollable="true"
 					single="true"
 					text="活动发起方和参与用户需同意《络绎有客游戏用户服务协议》方可进行游戏，使用本服务即视为已阅读并同意受本协议的约束。活动发起方不得利用本程序从事国家法律法规禁止的违法犯罪活动，不得上架法律法规禁止或限制发布的产品，活动发起方对所提供奖品的质量和兑奖承诺全权负责。">
 				</uni-notice-bar>
 			</view>
-			<view class="tips" v-if="Number(gameInfo.status) == 3">
+			<view style="position: relative" class="tips" v-if="Number(gameInfo.status) == 3">
 				游戏时间：{{
           gameInfo.game_start_time + ' - ' + gameInfo.game_end_time
         }}
@@ -213,7 +213,8 @@
 			<redEnvelope @handleGameResult="handleGameResult" @play="play" ref="redEnvelope" :result="gameResult.result"
 				:prize="gameResult.prize" :playTime="playTime" :type="gameInfo.lottery_type"
 				:openShare="isOpenShareContent" />
-			<view v-if="isOpenShareContent" style="position: relative" class="de_btn zl_btn" @click="popShow('share')">喊好友来游戏</view>
+			<view v-if="isOpenShareContent" style="position: relative" class="de_btn zl_btn" @click="popShow('share')">
+				喊好友来游戏</view>
 			<view class="recorde_ad_wrap" style="position: relative">
 				<!-- <view class="recorde_ad_wrap" :style="{'min-height': gameInfo && gameInfo.ad_info.length > 0 ? '400rpx' : '200rpx'}"> -->
 				<view class="record_wrap">
@@ -1021,30 +1022,30 @@
 		},
 		onLoad(options) {
 			const _this = this
-			// uni.getSystemInfo({
-			// 	success: function(res) {
-			// 		// _this.minHeight = res.windowHeight
-			// 		uni.createSelectorQuery().selectAll('#lottie_demo').node(res => {
-			// 			const canvas = res[0].node
-			// 			let device = uni.getSystemInfo();
-			// 			const context = canvas.getContext('2d')
-			// 			canvas.height = uni.getSystemInfoSync().screenHeight
-			// 			canvas.width = uni.getSystemInfoSync().screenWidth
-			// 			// canvas.height = 1000
-			// 			// canvas.width = 1000
-			// 			lottie.setup(canvas)
-			// 			_this.ani = lottie.loadAnimation({
-			// 				loop: true,
-			// 				autoplay: true,
-			// 				path: 'https://static.roi-cloud.com/upload/yaoyaoshu/yaoyaoshu_new.json',
-			// 				rendererSettings: {
-			// 					context,
-			// 				},
-			// 			})
-			// 			_this.inited = true
-			// 		}).exec()
-			// 	},
-			// })
+			uni.getSystemInfo({
+				success: function(res) {
+					uni.createSelectorQuery().selectAll('#lottie_demo').node(res => {
+						const canvas = res[0].node
+						let device = uni.getSystemInfo();
+						const context = canvas.getContext('2d')
+						canvas.height = uni.getSystemInfoSync().screenHeight
+						canvas.width = uni.getSystemInfoSync().screenWidth
+						// canvas.height = 1000
+						// canvas.width = 1000
+						lottie.setup(canvas)
+						_this.ani = lottie.loadAnimation({
+							loop: true,
+							autoplay: true,
+							// path: 'https://static.roi-cloud.com/upload/yaoyaoshu/yaoyaoshu_new.json',
+							path: 'https://static.roi-cloud.com/upload/yaoyaoshu/kaihongbao.json',
+							rendererSettings: {
+								context,
+							},
+						})
+						_this.inited = true
+					}).exec()
+				},
+			})
 
 			console.log(
 				process.env.NODE_ENV,
@@ -2668,8 +2669,7 @@
 		height: 100vh;
 		width: 100vw;
 		position: absolute;
-
-
+		top: 0
 	}
 
 	@mixin barrageContent {
@@ -4137,7 +4137,6 @@
 			font-size: 24upx;
 			margin: 0upx 0 8upx;
 			z-index: 21;
-			position: relative;
 		}
 
 		.bowl_title {
