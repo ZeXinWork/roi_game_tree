@@ -110,6 +110,20 @@
 					@click="confirmExchange">是</view>
 			</view>
 		</popup>
+		<popup ref="vipCard" class="vip_card" width="640" left="56" top="336">
+			<view class="content">
+				<view class="p_header">
+					<image @click="$refs.vipCard.close()" class="icon_close" src="https://static.roi-cloud.com/base/close.png" mode="">
+					</image>
+				</view>
+				<view class="g_info">
+					{{ gameInfo.name + ', 邀请您领取会员卡'}}
+				</view>
+				<view class="g_content">
+					<view class="g_btn" @click="addCard">去开卡</view>
+				</view>
+			</view>
+		</popup>
 		<popup ref="finish" class="finish_poup" width="640" left="56" top="336">
 			<view class="finish_content">
 				<view class="title">兑换成功</view>
@@ -221,6 +235,8 @@
 				points: "desc",
 				page: 0,
 				curr_show_item: {},
+				isOpenVip: false,
+				isShowVip: true,
 			};
 		},
 		onLoad(options) {
@@ -351,6 +367,19 @@
 						"YYYY年MM月DD日"
 					);
 					this.gameInfo = res;
+					this.isOpenVip = Number(res.open_wx_club) == 1
+					if (this.isOpenVip) {
+						// TODO： 判断是否领取会员卡
+						test.then(res => {
+							// 领了，就不显示弹窗
+							if (res.errno) {
+								this.isShow = false
+								return
+							}
+							// 没领，就显示
+							this.isShow = true
+						})
+					}
 					if (res.ad_type == 1) {
 						this.advertList = res.ad_info
 					} else {
@@ -369,6 +398,34 @@
 				clearInterval(this.timer);
 				this.$refs.dialog.close();
 			},
+			addCard() {
+				const _this = this
+				wx.navigateToMiniProgram({
+					appId: 'wxeb490c6f9b154ef9', //固定为此 appId，不可改动
+					path: 'pages/card_open/card_open',//固定为此path
+					envVersion: 'release',//商家正式版小程序拉起正式版组件；若此时为商家体验版小程序拉起体验版组件，则envVersion传值trial（体验版拉起，需找微信支付产品单独开权限）
+					extraData: {
+						// create_card_appid:"wxbc1da991f125c7c8", // 测试用
+						// card_id: "pU2mM6ZBAtOnozvtmM0IYDqn0O2M",	// 测试用
+						create_card_appid: _this.gameInfo.merchant_no,
+						card_id: _this.gameInfo.member_no,
+						outer_str: "yaoyaoshu",
+						activate_type: "ACTIVATE_TYPE_NORMAL",// ACTIVATE_TYPE_NORMAL：一键激活 ACTIVATE_TYPE_JUMP：跳转激活
+						// jump_url: "https://www.qq.com"//跳转路径
+						// jump_appid: "" // 跳转小程序， 同时配置url和appid优先跳转appid
+						// jump_path: "" // 跳转小程序路径
+					},  
+					success: function(res) {
+						_this.exchangePrisePoupShow(_this.exchangeGoddsInfo)
+					},
+					fail: function(err) {
+						console.log(err)
+					},
+					complete: function() {
+						_this.$refs.vipCard.close()
+					}
+				})
+			},
 			confirmExchange(e) {
 				try {
 					this.$refs.exchange.hide();
@@ -376,7 +433,11 @@
 						flag: true
 					})
 					if (this.user_info.phone) {
-						this.exchangePrise();
+						if (this.isOpenVip && this.isShow){
+							this.$refs.vipCard.show()
+						} else {
+							this.exchangePrise();
+						}
 					} else {
 						const _this = this;
 						uni.login({
@@ -634,6 +695,45 @@
 				&.active {
 					color: #576b95;
 					border-left: 1upx solid rgba(0, 0, 0, 0.1);
+				}
+			}
+		}
+	}
+
+	.vip_card {
+		.content {
+			display: flex;
+			flex-direction: column;
+			.p_header {
+				display: flex;
+				padding: 40upx;
+				justify-content: flex-end;
+				.icon_close {
+					width: 40upx;
+					height: 40upx;
+				}
+			}
+
+			.g_info {
+				text-align: center;
+				padding: 0 40rpx;
+			}
+			
+			.g_content {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				.g_btn {
+					width: 406upx;
+					height: 80upx;
+					color: #fff;
+					line-height: 80upx;
+					margin: 80upx auto 0;
+					background: linear-gradient(180deg, #ff7657 0%, #e93e3d 100%);
+					box-shadow: 0 10upx 20upx 0 #f96650;
+					border-radius: 51upx;
+					margin-bottom: 60rpx;
 				}
 			}
 		}
