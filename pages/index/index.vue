@@ -1637,6 +1637,21 @@
 						const user = this.$storage.getUser()
 						if (user && user.userId) {
 							this.gameHelp()
+							const gameInfo = this.$storage.get('gameInfo')
+							console.log(gameInfo.fission_user,gameInfo.fission_user === 1 )
+							if (gameInfo.fission_user === 1 ) {
+								const locationTime = this.$storage.get('getLocationTime')
+								const launchOptions = this.$storage.get('options')
+								this.trackEvent('splitUser', {
+									userOpenID_evar: res.openid,
+									shareLeadNewUserOpenID_evar: user.openid,
+									sceneID_evar: launchOptions.scene + '',
+									referrerInfo_evar: JSON.stringify(launchOptions.referrerInfo),
+									locationLongitude_evar: locationTime.longitude,
+									locationLatitude_evar: locationTime.latitude,
+									'3rdpartyUserID_evar': res.open_uid,
+								})
+							}
 						}
 					})
 				}
@@ -2812,6 +2827,12 @@
 						game_id,
 					}
 				}
+				if (this.inviteCode) {
+					params = {
+						...params,
+						invite_code: this.inviteCode
+					}
+				}
 				gameInfo(params)
 					.then((res) => {
 						if (res.errno === '1') {
@@ -3086,11 +3107,11 @@
 			trackEvent(name, data) {
 				const gameInfo = this.$storage.get('gameInfo')
 				const params = cleanObject({
-					...data,
 					gameID_evar: this.gameId,
 					gameName_evar: gameInfo.name,
 					userOpenID_evar: this.user.openid + '',
 					timeStamp_evar: Date.parse(new Date()) + '',
+					...data,
 				})
 				this.$uma.trackEvent(name, params)
 				uploadTrackLog(name, params)
