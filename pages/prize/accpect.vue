@@ -364,6 +364,7 @@
 					'gameID_evar': this.gameId,
 					'gameName_evar': this.gameInfo.name,
 					'userOpenID_evar': this.userInfo.openid + '',
+					'enterpriseID_evar': this.gameInfo.enterprise_id == '0' ? -1 : Number(gameInfo.enterprise_id),
 					'timeStamp_evar': Date.parse(new Date()) + ''
 				})
 				this.$uma.trackEvent('scanSponsorQRcode', params)

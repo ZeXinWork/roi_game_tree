@@ -3111,8 +3111,10 @@
 					gameName_evar: gameInfo.name,
 					userOpenID_evar: this.user.openid + '',
 					timeStamp_evar: Date.parse(new Date()) + '',
+					enterpriseID_evar: gameInfo.enterprise_id == '0' ? -1 : Number(gameInfo.enterprise_id),
 					...data,
 				})
+
 				this.$uma.trackEvent(name, params)
 				uploadTrackLog(name, params)
 			},
